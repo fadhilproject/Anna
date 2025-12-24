@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultah Anna ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Sacramento&family=Indie+Flower&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            transition: background 1.5s ease;
+            position: relative;
+        }
+        
+        /* BACKGROUND STYLES */
+        .bg-intro { 
+            background-color: #ffe4e6; /* Pink lembut */
+            /* Pola Wortel Transparan Dikit */
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-size='20' opacity='0.4'%3E🥕%3C/text%3E%3C/svg%3E");
+            color: #831843; 
+        }
+
+        .bg-party {
+            background-color: #ffb7c5; /* Pink Cherry Blossom */
+            /* Pola Wortel yang lebih jelas */
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-size='24'%3E🥕%3C/text%3E%3C/svg%3E");
+            color: #333;
+            animation: moveCarrots 20s linear infinite;
+        }
+
+        @keyframes moveCarrots {
+            from { background-position: 0 0; }
+            to { background-position: 60px 60px; }
+        }
+
+        .bg-dark {
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            color: white;
+        }
+
+        /* Floating Shapes */
+        .bg-shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatShape 20s infinite linear;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .shape-1 { width: 300px; height: 300px; background: rgba(255, 255, 255, 0.4); top: -50px; left: -100px; }
+        .shape-2 { width: 200px; height: 200px; background: rgba(255, 255, 255, 0.3); bottom: 10%; right: -50px; animation-duration: 25s; }
+
+        @keyframes floatShape {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(20px, 40px) rotate(180deg); }
+            100% { transform: translate(0, 0) rotate(360deg); }
+        }
+
+        .font-cursive { font-family: 'Sacramento', cursive; }
+        .font-hand { font-family: 'Indie Flower', cursive; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.2);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 1.5s ease-in forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .slide-up { animation: slideUp 1s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* REALISTIC FLAME ANIMATION */
+        .flame {
+            width: 20px;
+            height: 30px;
+            background: radial-gradient(ellipse at bottom, rgba(255,255,0,0.8) 0%, rgba(255,165,0,0.8) 60%, rgba(255,0,0,0.5) 100%);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 0.15s ease-in-out infinite alternate;
+            filter: blur(0.5px);
+            cursor: pointer;
+        }
+        @keyframes flicker {
+            0% { transform: translateX(-50%) rotate(-2deg) scaleY(1); opacity: 0.9; }
+            100% { transform: translateX(-50%) rotate(2deg) scaleY(1.05); opacity: 1; }
+        }
+        
+        .smoke {
+            width: 4px; height: 10px; background-color: #aaa; border-radius: 2px;
+            animation: smokeRise 1.5s forwards; opacity: 0;
+        }
+        @keyframes smokeRise {
+            0% { opacity: 0.6; transform: translateX(-50%) translateY(0) scale(1); filter: blur(2px); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-40px) scale(3); filter: blur(5px); }
+        }
+
+        .step { display: none; }
+        .step.active { display: flex; }
+
+        /* Polaroid Style for Memory */
+        .polaroid {
+            background: white;
+            padding: 1rem 1rem 3rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transform: rotate(-2deg);
+            transition: transform 0.3s;
+        }
+        .polaroid:hover { transform: rotate(0deg) scale(1.02); }
+    </style>
+</head>
+<body id="body" class="bg-intro min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Background Shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="v4.www-y2mate.blog - Pamungkas - Happy Birthday To You (Official Lyrics Video) (320 KBps).mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- STEP 0: PROLOG (STORY TELLING START) -->
+    <div id="step0" class="step active flex-col items-center justify-center max-w-lg text-center z-10">
+        <div class="glass-card p-8 rounded-2xl slide-up">
+            <h1 class="text-3xl font-cursive text-pink-600 mb-4">Hallo, Anna... 🥕</h1>
+            <div id="story-text" class="text-gray-700 leading-relaxed mb-6 font-hand text-lg min-h-[80px]">
+                <!-- Teks akan diketik otomatis oleh JS -->
+            </div>
+            <button onclick="startJourney()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full shadow-lg transition transform hover:scale-105">
+                Lanjut ❤️
+            </button>
+        </div>
+    </div>
+
+    <!-- STEP 1: AMPLOP -->
+    <div id="step1" class="step flex-col items-center justify-center w-full max-w-md text-center z-10 hidden">
+        <p class="text-pink-800 mb-6 font-hand text-xl animate-bounce bg-white/50 px-4 py-1 rounded-full">Misi pakett...</p>
+        <div class="cursor-pointer group" onclick="goToMemoryLane()">
+            <div class="relative w-64 h-48 bg-pink-500 rounded-lg shadow-2xl flex items-center justify-center transform transition group-hover:scale-105 group-hover:rotate-2 duration-300 border-4 border-white">
+                <div class="absolute inset-0 border-2 border-dashed border-white m-2 rounded"></div>
+                <div class="text-white text-center">
+                    <span class="text-4xl">💌</span>
+                    <p class="mt-2 font-bold text-lg tracking-widest">UNTUK ANNA</p>
+                </div>
+                <div class="absolute -top-4 -right-4 bg-white text-red-500 rounded-full p-2 shadow-lg animate-pulse">
+                    Buka Dulu
+                </div>
+            </div>
+        </div>
+        <p class="text-white text-xs mt-8 text-center drop-shadow font-bold bg-pink-400/50 px-2 rounded">Disarankan pake headphone🎧 biar lebih berkesan hehe</p>
+    </div>
+
+    <!-- STEP 1.5: MEMORY LANE (KILAS BALIK) -->
+    <div id="step-memory" class="step flex-col items-center justify-center w-full max-w-lg text-center z-10 hidden">
+        <h2 class="text-2xl font-cursive text-pink-700 mb-2 bg-white/60 px-4 rounded-full">Sebelum kita lanjut...</h2>
+        <p class="text-gray-600 text-sm mb-6 bg-white/40 px-3 rounded-full">Ayo coba ingat hal keren apa yang sudah kamu lakukan tahun ini✨</p>
+        
+        <div class="relative w-full">
+            <!-- Memory 1 -->
+            <div id="mem-1" class="memory-card active glass-card p-6 rounded-xl relative">
+                <div class="polaroid mx-auto w-48 mb-4">
+                    <!-- Ganti gambar placeholder ini -->
+                    <img src="MC.jpeg" class="w-full h-40 object-cover grayscale hover:grayscale-0 transition">
+                    <p class="text-center text-xs text-gray-500 mt-2 font-hand">Kamu jadi lebih berani 💪</p>
+                </div>
+                <p class="text-gray-700 italic">"Tahun ini, kamu jadi lebih berani dan percaya diri. Banyak kesempatan yang kamu ambil mulai dari jadi dirigen, moderator, bahkan MC h-1 pun di sikatt wkwk. Walaupun awalnya takut, tapi kamu tetep maju. Keren banget sih! Aku bangga banget sama kamu."</p>
+                <button onclick="nextMemory(2)" class="mt-4 text-pink-500 font-bold hover:underline">Lanjut →</button>
+            </div>
+
+            <!-- Memory 2 -->
+            <div id="mem-2" class="memory-card hidden glass-card p-6 rounded-xl relative">
+                <div class="polaroid mx-auto w-48 mb-4">
+                    <img src="PPPK.jpeg" class="w-full h-40 object-cover grayscale hover:grayscale-0 transition">
+                    <p class="text-center text-xs text-gray-500 mt-2 font-hand">Kamu berjuang untuk PPPK</p>
+                </div>
+                <p class="text-gray-700 italic">"Tahun ini juga, kamu berjuang keras untuk PPPK. Meskipun ada beberapa kejadian tidak terduga dan tantangan. Walaupun ragu, kamu tetap mencoba dan ngga nyerah. It's okayy. Tahun depan kita coba lagi yaa, kita gaspol lagi persiapannya 🔥"</p>
+                <button onclick="nextMemory(3)" class="mt-4 text-pink-500 font-bold hover:underline">Lanjut →</button>
+            </div>
+
+            <!-- Memory 3 -->
+            <div id="mem-3" class="memory-card hidden glass-card p-6 rounded-xl relative">
+                <div class="polaroid mx-auto w-48 mb-4">
+                    <img src="Buku.jpg" class="w-full h-40 object-cover grayscale hover:grayscale-0 transition">
+                    <p class="text-center text-xs text-gray-500 mt-2 font-hand">Kamu jatuh cinta dengan buku & Dana darurat kamu tercapai tahun ini</p>
+                </div>
+                <p class="text-gray-700 italic">"Ini sih, aku iri sama kamu wkwk. Kamu keren banget. Tetap konsisten investasinya ya. Aku suka banget dengerin kamu excited nyeritain buku yang habis kamu baca."</p>
+                <button onclick="goToStep2()" class="mt-4 bg-pink-500 text-white px-4 py-2 rounded-full shadow hover:bg-pink-600">Lanjutt! 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 2: DARK ROOM -->
+    <div id="step2" class="step flex-col items-center justify-center w-full max-w-md text-center z-10 hidden">
+        <h2 class="text-3xl mb-4 font-light text-white drop-shadow-md">Loh loh, kok gelap? 🌑</h2>
+        <p class="mb-8 text-white/80 font-hand text-lg">Pasti ada yang iseng matiin lampu...</p>
+        <button onclick="turnOnLights()" class="bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-3 px-8 rounded-full shadow-[0_0_30px_rgba(253,224,71,0.6)] transition transform hover:scale-110 flex items-center gap-2 border-2 border-white">
+            <span>💡</span> Nyalakan
+        </button>
+    </div>
+
+    <!-- STEP 3: DECORATION -->
+    <div id="step3" class="step flex-col items-center justify-center w-full max-w-lg text-center z-10 hidden">
+        <h2 class="text-3xl font-cursive text-white drop-shadow-md mb-2" style="text-shadow: 2px 2px 0px #ff69b4;">Yuk Hias Ruangannya, ketuk satu-satu yaa!</h2>
+        <p class="text-white mb-4 text-sm drop-shadow-sm bg-black/20 px-3 py-1 rounded-full">Ruangannya masih sepi nih, kita bikin meriah yuk ✨</p>
+
+        <div class="relative w-full h-64 bg-white/30 backdrop-blur-md rounded-2xl border-2 border-dashed border-white/50 mb-6 flex items-center justify-center overflow-hidden shadow-xl" id="roomPreview">
+            <!-- Decorations Elements -->
+            <div id="decor-music" class="hidden absolute top-4 left-4 text-2xl animate-pulse">🎵</div>
+            <div id="decor-music-2" class="hidden absolute top-4 right-4 text-2xl animate-pulse delay-700">🎵</div>
+            <div id="decor-balloons" class="hidden absolute inset-0 pointer-events-none">
+                <div class="absolute top-[10%] left-[10%] text-4xl animate-bounce">🎈</div>
+                <div class="absolute top-[20%] right-[10%] text-5xl animate-bounce delay-100">🎈</div>
+            </div>
+            <div id="decor-banner" class="hidden absolute top-[40%] w-full text-center transform -translate-y-1/2">
+                <span class="bg-gradient-to-r from-pink-600 to-purple-600 text-transparent bg-clip-text text-4xl font-bold font-cursive drop-shadow-lg">Happy Birthday!</span>
+            </div>
+            <div id="decor-cake" class="hidden absolute bottom-4 text-7xl cursor-pointer hover:scale-110 transition drop-shadow-2xl" onclick="goToStep4()">🎂</div>
+            <p id="empty-msg" class="text-white/80 font-medium">Masih Kosong Nih...</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 w-full max-w-sm">
+            <button id="btn-music" onclick="addDecoration('music')" class="bg-white text-indigo-700 py-2 rounded-xl font-bold shadow-lg hover:bg-indigo-50 transition">1. Musik 🎵</button>
+            <button id="btn-balloon" onclick="addDecoration('balloon')" class="bg-white/50 text-gray-500 py-2 rounded-xl font-bold shadow-lg transition" disabled>2. Balon 🎈</button>
+            <button id="btn-banner" onclick="addDecoration('banner')" class="bg-white/50 text-gray-500 py-2 rounded-xl font-bold shadow-lg transition" disabled>3. Banner 🎀</button>
+            <button id="btn-cake" onclick="addDecoration('cake')" class="bg-white/50 text-gray-500 py-2 rounded-xl font-bold shadow-lg transition" disabled>4. Kue 🎂</button>
+        </div>
+    </div>
+
+    <!-- STEP 4: CAKE & WISH -->
+    <div id="step4" class="step flex-col items-center justify-center w-full max-w-md text-center z-10 hidden">
+        <h2 class="text-2xl font-bold text-white drop-shadow-md mb-2 bg-pink-400/50 px-4 rounded-lg">Make a Wish, Anna! 🙏</h2>
+        <p class="text-white font-hand text-lg mb-8 bg-black/10 px-2 rounded">Tutup mata, ucapkan harapanmu, lalu ketuk api lilinnya satu-satu yaa...</p>
+        
+        <div class="relative mt-8 group cursor-pointer">
+            <div class="w-48 h-32 bg-pink-300 rounded-lg relative flex items-center justify-center shadow-2xl border-b-8 border-pink-400">
+                <div class="absolute -top-4 w-full h-8 bg-pink-200 rounded-full"></div>
+                <div class="text-pink-600 font-bold opacity-30 text-4xl select-none">HBD</div>
+            </div>
+            <div class="absolute -top-12 left-0 w-full flex justify-center gap-6">
+                <div class="relative w-4 h-16 bg-yellow-100 rounded border border-yellow-200"><div class="flame" onclick="blowCandle(this)"></div></div>
+                <div class="relative w-4 h-16 bg-blue-100 rounded border border-blue-200 -mt-4"><div class="flame" onclick="blowCandle(this)"></div></div>
+                <div class="relative w-4 h-16 bg-green-100 rounded border border-green-200"><div class="flame" onclick="blowCandle(this)"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 5: FINALE -->
+    <div id="step5" class="step flex-col items-center justify-center w-full max-w-md hidden z-20">
+        <div class="glass-card w-full p-6 rounded-3xl shadow-2xl border-t-4 border-pink-500 slide-up relative bg-white/95">
+            <div class="absolute -top-6 -left-6 text-5xl rotate-[-15deg]">🎁</div>
+            <div class="absolute -bottom-4 -right-4 text-4xl rotate-[15deg]">🌹</div>
+
+            <div class="w-32 h-32 mx-auto rounded-full p-1 bg-gradient-to-tr from-pink-400 to-yellow-400 mb-4 shadow-lg">
+                <div class="w-full h-full rounded-full overflow-hidden bg-white">
+                    <img src="Final.jpeg" class="w-full h-full object-cover">
+                </div>
+            </div>
+
+            <div class="text-center">
+                <h1 class="text-3xl font-cursive text-pink-600 mb-1">Happy Birthday</h1>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Anna ❤️</h2>
+                <div class="bg-pink-50 rounded-xl p-4 text-sm text-gray-700 leading-relaxed italic border border-pink-100 shadow-inner mb-6 font-hand text-lg">
+                    "Selamat bertambah usia. Terima kasih sudah menjadi warna terindah dalam hidupku. Semoga bahagiamu tak pernah pudar, hari ini dan selamanya. Love you to the moon and back! Hehe 🎉💕"
+                </div>
+                <div class="flex justify-center gap-2">
+                    <button onclick="triggerConfetti()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-2 rounded-full font-bold shadow-lg transition transform active:scale-95">🎉 Rayakan</button>
+                    <a href="https://wa.me/6282134829391?text=Makasih%20sayang,%20aku%20suka%20banget.%20Aku%20mau%20claim%20duidd%20100%20ribu%20buat%20pijit%20hehe" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-full font-bold shadow-lg transition transform active:scale-95 flex items-center gap-1"><span>💬</span> Balas</a>
+                </div> 
+
+            </div>
+        </div>
+        <p class="text-white text-xs mt-8 text-center drop-shadow font-bold bg-pink-400/50 px-2 rounded">Dibuat dengan sepenuh hati.</p>
+    </div>
+
+    <script>
+        // --- TYPING EFFECT FOR INTRO ---
+        const storyText = "Hari ini berjalan seperti biasa, matahari bersinar, burung berkicau, tetanggamu masih sibuk membangun rumahnya... Tapi tunggu, kalender bilang hari ini ada yang spesial. Apa yaa?";
+        let charIndex = 0;
+        
+        function typeWriter() {
+            if (charIndex < storyText.length) {
+                document.getElementById("story-text").innerHTML += storyText.charAt(charIndex);
+                charIndex++;
+                setTimeout(typeWriter, 40);
+            }
+        }
+        // Start typing when page loads
+        window.onload = () => {
+            setTimeout(typeWriter, 500);
+        };
+
+        // --- NAVIGATION LOGIC ---
+        function showStep(id) {
+            document.querySelectorAll('.step').forEach(el => {
+                el.classList.remove('active');
+                el.classList.add('hidden');
+            });
+            const target = document.getElementById(id);
+            target.classList.remove('hidden');
+            setTimeout(() => target.classList.add('active'), 50);
+        }
+
+        function startJourney() {
+            // Play music user interaction requirement
+            const music = document.getElementById('bgMusic');
+            music.volume = 0.5;
+            music.play().catch(() => console.log("Audio autoplay blocked"));
+            showStep('step1');
+        }
+
+        function goToMemoryLane() {
+            showStep('step-memory');
+        }
+
+        function nextMemory(num) {
+            // Hide all memories
+            document.querySelectorAll('.memory-card').forEach(el => el.classList.add('hidden'));
+            // Show target
+            const target = document.getElementById(`mem-${num}`);
+            target.classList.remove('hidden');
+            target.classList.add('fade-in');
+        }
+
+        function goToStep2() {
+            document.getElementById('body').className = "min-h-screen flex flex-col items-center justify-center p-4 bg-dark";
+            showStep('step2');
+        }
+
+        function turnOnLights() {
+            document.getElementById('body').className = "min-h-screen flex flex-col items-center justify-center p-4 bg-party";
+            showStep('step3');
+        }
+
+        // --- DECORATION LOGIC ---
+        function addDecoration(type) {
+            const btn = document.getElementById(`btn-${type}`);
+            
+            // Enable next button helper
+            const enableBtn = (id) => {
+                const el = document.getElementById(id);
+                el.disabled = false;
+                el.classList.remove('bg-white/50', 'text-gray-500');
+                el.classList.add('bg-white', 'text-pink-600', 'hover:bg-pink-50');
+            };
+
+            if(type === 'music') {
+                document.getElementById('decor-music').classList.remove('hidden');
+                document.getElementById('decor-music-2').classList.remove('hidden');
+                enableBtn('btn-balloon');
+            } else if(type === 'balloon') {
+                document.getElementById('decor-balloons').classList.remove('hidden');
+                document.getElementById('empty-msg').classList.add('hidden');
+                enableBtn('btn-banner');
+            } else if(type === 'banner') {
+                document.getElementById('decor-banner').classList.remove('hidden');
+                enableBtn('btn-cake');
+            } else if(type === 'cake') {
+                document.getElementById('decor-cake').classList.remove('hidden');
+                setTimeout(() => goToStep4(), 1500);
+            }
+            
+            // Disable current button
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.innerHTML += " ✅";
+        }
+
+        function goToStep4() {
+            showStep('step4');
+        }
+
+        // --- CANDLE LOGIC ---
+        let candlesBlown = 0;
+        function blowCandle(el) {
+            if(el.classList.contains('smoke')) return;
+            el.classList.remove('flame');
+            el.classList.add('smoke');
+            candlesBlown++;
+            if(candlesBlown >= 3) setTimeout(goToStep5, 1200);
+        }
+
+        function goToStep5() {
+            showStep('step5');
+            triggerConfetti();
+        }
+
+        function triggerConfetti() {
+            const duration = 3000;
+            const end = Date.now() + duration;
+            (function frame() {
+                confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+                confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+        }
+    </script>
+</body>
+</html>
